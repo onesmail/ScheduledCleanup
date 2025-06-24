@@ -31,7 +31,6 @@ namespace ScheduledCleanup
                 checkedListBox1.Items.Add(item.ToString(), item.Selected);
             }
 
-
             var config = DataConfigProvider.DataConfig.Config;
             if (config != null)
             {
@@ -58,6 +57,8 @@ namespace ScheduledCleanup
                 {
                     textBox2.Text = config.Interval.ToString();
                 }
+
+                checkBox1.Checked = config.DelEmptyFolder;
             }
 
 
@@ -75,59 +76,44 @@ namespace ScheduledCleanup
         /// <param name="e"></param>
         private void Timer2_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            var paths = DataConfigProvider.DataConfig.DelPaths.Where(x => x.Selected);
+            var selectedPaths = DataConfigProvider.DataConfig.DelPaths
+            .Where(x => x.Selected && Directory.Exists(x.Path))
+            .ToList();
 
-            var allow = DataConfigProvider.DataConfig.Config.Allow.Where(x => x.Selected);
+            var allowedExtensions = DataConfigProvider.DataConfig.Config.Allow
+            .Where(x => x.Selected && !string.IsNullOrWhiteSpace(x.Extension))
+            .Select(x => x.Extension.Trim().ToLowerInvariant())
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var delPath in paths)
+            foreach (var delPath in selectedPaths)
             {
-                if (!Directory.Exists(delPath.Path))
+                if (!TryParseDateRange(delPath, out var startTime, out var endTime))
                 {
-                    Logger.WriteLog($"[目录不存在] {delPath.Path}", LogLevel.ERROR);
+                    //Logger.WriteLog($"[无效日期范围] {delPath.Path}", LogLevel.ERROR);
                     continue;
                 }
 
-                foreach (var item in allow)
+                try
                 {
-                    if (string.IsNullOrWhiteSpace(item.Extension))
-                    {
-                        continue;
-                    }
+                    var files = allowedExtensions
+                        .SelectMany(ext => Directory.EnumerateFiles(delPath.Path, $"*.{ext.TrimStart('.')}", SearchOption.AllDirectories))
+                        .Distinct()
+                        .ToList();
 
-                    var files = Directory.GetFiles(delPath.Path, $"*{item.Extension}");
                     foreach (var file in files)
                     {
-                        if (!File.Exists(file))
-                        {
-                            continue;
-                        }
-
-                        var fileInfo = new FileInfo(file);
-
-                        // 检查文件创建时间是否在指定范围内
-                        if (DateTime.TryParse(fileInfo.LastWriteTime.ToShortDateString(), out DateTime creationTime))
-                        {
-                            var startTime = DateTime.Parse(delPath.Start);
-                            var endTime = DateTime.Parse(delPath.End);
-                            if (creationTime >= startTime && creationTime <= endTime)
-                            {
-                                // 删除文件
-                                try
-                                {
-                                    FileHelper.DelFile(file);
-                                    Logger.WriteLog($"[删除成功] {file}");
-                                }
-                                catch (Exception ex)
-                                {
-                                    Logger.WriteLog($"[删除失败] {file} - {ex.Message}", LogLevel.ERROR);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Logger.WriteLog($"[时间解析失败] {fileInfo.CreationTime}", LogLevel.ERROR);
-                        }
+                        ProcessFile(file, startTime, endTime);
                     }
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteLog($"[目录处理失败] {delPath.Path} - {ex.Message}", LogLevel.ERROR);
+                }
+
+                if (DataConfigProvider.DataConfig.Config.DelEmptyFolder)
+                {
+                    // 删除空目录
+                    FileHelper.DeleteEmptyDirectories(delPath.Path);
                 }
             }
 
@@ -136,6 +122,47 @@ namespace ScheduledCleanup
             //{
             //    label1.Text = currentTime;
             //});
+        }
+
+        private static bool TryParseDateRange(DelPath delPath, out DateTime startTime, out DateTime endTime)
+        {
+            startTime = default;
+            endTime = default;
+
+            return !string.IsNullOrWhiteSpace(delPath.Start) &&
+                   !string.IsNullOrWhiteSpace(delPath.End) &&
+                   DateTime.TryParse(delPath.Start, out startTime) &&
+                   DateTime.TryParse(delPath.End, out endTime) &&
+                   startTime <= endTime;
+        }
+
+        private static void ProcessFile(string file, DateTime startTime, DateTime endTime)
+        {
+            try
+            {
+                if (!File.Exists(file))
+                {
+                    return;
+                }
+
+                var fileInfo = new FileInfo(file);
+                if (fileInfo.LastWriteTime >= startTime && fileInfo.LastWriteTime <= endTime)
+                {
+                    var result = FileHelper.DelFile(file);
+                    if (result.Success)
+                    {
+                        Logger.WriteLog($"[删除成功] {file}");
+                    }
+                    else
+                    {
+                        Logger.WriteLog($"[删除失败] {file} - {result.Message}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog($"[删除失败] {file} - {ex.Message}", LogLevel.ERROR);
+            }
         }
 
         /// <summary>
@@ -190,7 +217,7 @@ namespace ScheduledCleanup
 
             //}
 
-            if (DataConfigProvider.PathContains(textBox1.Text))
+            if (DataConfigProvider.PathExists(textBox1.Text))
             {
                 MessageBox.Show("目录已存在", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -208,6 +235,12 @@ namespace ScheduledCleanup
 
                 DataConfigProvider.AddPath(data);
                 checkedListBox1.Items.Add(data.ToString(), true);
+
+                var config = DataConfigProvider.DataConfig.Config;
+                config.Start = dateTimePicker1.Value.ToShortDateString();
+                config.End = dateTimePicker2.Value.ToShortDateString();
+
+                DataConfigProvider.SaveConfig(config);
 
                 textBox1.Clear();
             }
@@ -300,6 +333,7 @@ namespace ScheduledCleanup
                 Interval = Convert.ToInt32(textBox2.Text),
                 Start = dateTimePicker1.Value.ToShortDateString(),
                 End = dateTimePicker2.Value.ToShortDateString(),
+                DelEmptyFolder = checkBox1.Checked,
                 Allow = list
             });
 
@@ -469,6 +503,11 @@ namespace ScheduledCleanup
             }
         }
 
+        /// <summary>
+        /// 选中允许删除的格式
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void checkedListBox2_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             var allow = checkedListBox2.Items[e.Index].ToString();

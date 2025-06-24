@@ -87,5 +87,52 @@ namespace ScheduledCleanup.Helper
                 MessageBox.Show($"打开路径时出错: {ex.Message}");
             }
         }
+
+        /// <summary>
+        /// 删除指定路径下的所有空目录
+        /// </summary>
+        /// <param name="rootPath"></param>
+        public static void DeleteEmptyDirectories(string rootPath)
+        {
+            if (string.IsNullOrWhiteSpace(rootPath))
+                return;
+
+            if (!Directory.Exists(rootPath))
+                return;
+
+            // 获取所有子目录（包括嵌套目录）
+            var allDirectories = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories);
+
+            // 按目录深度降序排序（先处理最深层的目录）
+            var orderedDirectories = allDirectories
+                .OrderByDescending(d => d.Split(Path.DirectorySeparatorChar).Length);
+
+            foreach (var directory in orderedDirectories)
+            {
+                if (IsDirectoryEmpty(directory))
+                {
+                    try
+                    {
+                        Directory.Delete(directory);
+                        Logger.WriteLog($"已删除空目录: {directory}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog($"删除目录 {directory} 失败: {ex.Message}");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 检查目录是否为空（没有文件和子目录）
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private static bool IsDirectoryEmpty(string path)
+        {
+            return Directory.GetFiles(path).Length == 0 &&
+                   Directory.GetDirectories(path).Length == 0;
+        }
     }
 }

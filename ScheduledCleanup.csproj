@@ -9,8 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="bin\Debug\net9.0-windows\data.json" />
-    <Content Include="bin\Debug\net9.0-windows\logs\README.txt" />
+    <Compile Remove="bin\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <None Remove="bin\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

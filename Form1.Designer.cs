@@ -52,6 +52,7 @@
             textBox3 = new TextBox();
             button9 = new Button();
             label6 = new Label();
+            checkBox1 = new CheckBox();
             SuspendLayout();
             // 
             // folderBrowserDialog1
@@ -60,9 +61,9 @@
             // 
             // button1
             // 
-            button1.Location = new Point(874, 36);
+            button1.Location = new Point(859, 41);
             button1.Name = "button1";
-            button1.Size = new Size(75, 23);
+            button1.Size = new Size(90, 23);
             button1.TabIndex = 0;
             button1.Text = "选择文件夹";
             button1.UseVisualStyleBackColor = true;
@@ -70,14 +71,14 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(103, 37);
+            textBox1.Location = new Point(101, 42);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(752, 23);
             textBox1.TabIndex = 1;
             // 
             // button2
             // 
-            button2.Location = new Point(955, 36);
+            button2.Location = new Point(955, 41);
             button2.Name = "button2";
             button2.Size = new Size(75, 23);
             button2.TabIndex = 2;
@@ -98,7 +99,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(29, 39);
+            label1.Location = new Point(27, 44);
             label1.Name = "label1";
             label1.Size = new Size(68, 17);
             label1.TabIndex = 4;
@@ -106,7 +107,7 @@
             // 
             // dateTimePicker1
             // 
-            dateTimePicker1.Location = new Point(103, 83);
+            dateTimePicker1.Location = new Point(101, 13);
             dateTimePicker1.Name = "dateTimePicker1";
             dateTimePicker1.Size = new Size(157, 23);
             dateTimePicker1.TabIndex = 5;
@@ -134,7 +135,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(29, 88);
+            label2.Location = new Point(27, 18);
             label2.Name = "label2";
             label2.Size = new Size(68, 17);
             label2.TabIndex = 8;
@@ -152,7 +153,7 @@
             // 
             // textBox2
             // 
-            textBox2.Location = new Point(700, 82);
+            textBox2.Location = new Point(155, 210);
             textBox2.Name = "textBox2";
             textBox2.Size = new Size(155, 23);
             textBox2.TabIndex = 11;
@@ -160,7 +161,7 @@
             // 
             // dateTimePicker2
             // 
-            dateTimePicker2.Location = new Point(299, 82);
+            dateTimePicker2.Location = new Point(297, 12);
             dateTimePicker2.Name = "dateTimePicker2";
             dateTimePicker2.Size = new Size(148, 23);
             dateTimePicker2.TabIndex = 12;
@@ -168,7 +169,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(571, 86);
+            label3.Location = new Point(26, 214);
             label3.Name = "label3";
             label3.Size = new Size(128, 17);
             label3.TabIndex = 13;
@@ -177,7 +178,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(270, 86);
+            label4.Location = new Point(268, 16);
             label4.Name = "label4";
             label4.Size = new Size(13, 17);
             label4.TabIndex = 14;
@@ -185,7 +186,7 @@
             // 
             // button6
             // 
-            button6.Location = new Point(874, 79);
+            button6.Location = new Point(476, 208);
             button6.Name = "button6";
             button6.Size = new Size(75, 23);
             button6.TabIndex = 10;
@@ -218,7 +219,7 @@
             // 
             checkedListBox2.CheckOnClick = true;
             checkedListBox2.FormattingEnabled = true;
-            checkedListBox2.Location = new Point(103, 160);
+            checkedListBox2.Location = new Point(101, 115);
             checkedListBox2.MultiColumn = true;
             checkedListBox2.Name = "checkedListBox2";
             checkedListBox2.Size = new Size(752, 76);
@@ -228,7 +229,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(29, 158);
+            label5.Location = new Point(27, 113);
             label5.Name = "label5";
             label5.Size = new Size(68, 17);
             label5.TabIndex = 18;
@@ -236,14 +237,14 @@
             // 
             // textBox3
             // 
-            textBox3.Location = new Point(103, 122);
+            textBox3.Location = new Point(101, 77);
             textBox3.Name = "textBox3";
             textBox3.Size = new Size(157, 23);
             textBox3.TabIndex = 19;
             // 
             // button9
             // 
-            button9.Location = new Point(270, 122);
+            button9.Location = new Point(268, 77);
             button9.Name = "button9";
             button9.Size = new Size(75, 23);
             button9.TabIndex = 20;
@@ -254,11 +255,21 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(29, 125);
+            label6.Location = new Point(27, 80);
             label6.Name = "label6";
             label6.Size = new Size(68, 17);
             label6.TabIndex = 21;
             label6.Text = "添加格式：";
+            // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new Point(345, 212);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(99, 21);
+            checkBox1.TabIndex = 22;
+            checkBox1.Text = "删除空文件夹";
+            checkBox1.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -266,6 +277,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(1054, 632);
+            Controls.Add(checkBox1);
             Controls.Add(label6);
             Controls.Add(button9);
             Controls.Add(textBox3);
@@ -324,5 +336,6 @@
         private TextBox textBox3;
         private Button button9;
         private Label label6;
+        private CheckBox checkBox1;
     }
 }

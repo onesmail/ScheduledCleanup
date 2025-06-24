@@ -1,0 +1,36 @@
+{
+  "cnofig": {
+    "start": "",
+    "end": "",
+    "interval": 60,
+    "delemptyfolder": true,
+    "allow": [
+      {
+        "extension": ".jpg",
+        "selected": true
+      },
+      {
+        "extension": ".jpeg",
+        "selected": true
+      },
+      {
+        "extension": ".png",
+        "selected": true
+      },
+      {
+        "extension": ".mp4",
+        "selected": true
+      },
+      {
+        "extension": ".txt",
+        "selected": true
+      },
+      {
+        "extension": ".gif",
+        "selected": true
+      }
+    ]
+  },
+  "delpaths": [
+  ]
+}

@@ -38,7 +38,7 @@ namespace ScheduledCleanup.Helper
             {
                 if (!File.Exists(filePath))
                 {
-                    MessageBox.Show("文件不存在");
+                    Logger.WriteLog($"文件不存在: {filePath}", LogLevel.ERROR);
                     return default;
                 }
 
@@ -49,12 +49,13 @@ namespace ScheduledCleanup.Helper
             }
             catch (JsonException jsonEx)
             {
-                MessageBox.Show($"JSON解析错误: {jsonEx.Message}");
+                Logger.WriteLog($"JSON解析错误: {jsonEx.Message}", LogLevel.ERROR);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"读取JSON文件失败: {ex.Message}");
+                Logger.WriteLog($"读取JSON文件失败: {ex.Message}", LogLevel.ERROR);
             }
+
             return default;
         }
     }

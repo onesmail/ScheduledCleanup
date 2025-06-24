@@ -12,17 +12,18 @@ namespace ScheduledCleanup.Model
         public Config? Config { get; set; }
 
         /// <summary>
-        /// 删除结合
+        /// 删除目录列表
         /// </summary>
         [JsonPropertyName("delpaths")]
         public IList<DelPath> DelPaths { get; set; } = new List<DelPath>();
 
-        public static DataConfig? LoadFromJson(string filePath)
+        public static DataConfig LoadFromJson(string filePath)
         {
             try
             {
                 if (!File.Exists(filePath))
                 {
+                    MessageBox.Show($"配置文件不存在: {filePath}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return null;
                 }
                 string jsonString = File.ReadAllText(filePath);
@@ -30,11 +31,11 @@ namespace ScheduledCleanup.Model
             }
             catch (JsonException jsonEx)
             {
-                Console.WriteLine($"JSON解析错误: {jsonEx.Message}");
+                MessageBox.Show($"JSON解析错误: {jsonEx.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"读取JSON文件失败: {ex.Message}");
+                MessageBox.Show($"读取JSON文件失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return null;
         }
@@ -59,7 +60,13 @@ namespace ScheduledCleanup.Model
         /// 删除间隔时间
         /// </summary>
         [JsonPropertyName("interval")]
-        public int Interval { get; set; } = 1;
+        public int Interval { get; set; } = 60;
+
+        /// <summary>
+        /// 删除空文件夹
+        /// </summary>
+        [JsonPropertyName("delemptyfolder")]
+        public bool DelEmptyFolder { get; set; }
 
         /// <summary>
         /// 删除间隔时间
