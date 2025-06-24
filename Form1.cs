@@ -27,9 +27,11 @@ namespace ScheduledCleanup
         private void InitData()
         {
             var paths = DataConfigProvider.DataConfig.DelPaths;
-            foreach (var item in paths)
+
+            for (int i = 0; i < paths.Count; i++)
             {
-                checkedListBox1.Items.Add(item.ToString(), item.Selected);
+                var item = paths[i];
+                checkedListBox1.Items.Add($"{i + 1}. {item.ToString()}", item.Selected);
             }
 
             var config = DataConfigProvider.DataConfig.Config;
@@ -85,6 +87,12 @@ namespace ScheduledCleanup
             .Where(x => x.Selected && !string.IsNullOrWhiteSpace(x.Extension))
             .Select(x => x.Extension.Trim().ToLowerInvariant())
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+
+            if (!selectedPaths.Any() || !allowedExtensions.Any())
+            {
+                return;
+            }
 
             foreach (var delPath in selectedPaths)
             {
@@ -146,13 +154,17 @@ namespace ScheduledCleanup
                     return;
                 }
 
+                var start = startTime.ToString("yyyy/MM/dd 00:00:00");
+                var end = endTime.ToString("yyyy/MM/dd 23:59:59");
+
+
                 var fileInfo = new FileInfo(file);
-                if (fileInfo.LastWriteTime >= startTime && fileInfo.LastWriteTime <= endTime)
+                if (fileInfo.CreationTime >= Convert.ToDateTime(start) && fileInfo.CreationTime <= Convert.ToDateTime(end))
                 {
                     var result = FileHelper.DelFile(file);
                     if (result.Success)
                     {
-                        Logger.WriteLog($"[删除成功] {file}");
+                        Logger.WriteLog($"[删除成功] - [{fileInfo.CreationTime}] {file}");
                     }
                     else
                     {
@@ -319,8 +331,10 @@ namespace ScheduledCleanup
                     End = dateTimePicker2.Value.ToShortDateString()
                 };
 
+                var count = DataConfigProvider.DataConfig.DelPaths.Count;
+
                 DataConfigProvider.AddPath(data);
-                checkedListBox1.Items.Add(data.ToString(), true);
+                checkedListBox1.Items.Add($"{count + 1}. {data.ToString()}", true);
 
                 var config = DataConfigProvider.DataConfig.Config;
                 config.Start = dateTimePicker1.Value.ToShortDateString();

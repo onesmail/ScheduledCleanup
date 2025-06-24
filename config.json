@@ -18,16 +18,12 @@
         "selected": true
       },
       {
-        "extension": ".mp4",
-        "selected": true
-      },
-      {
-        "extension": ".txt",
-        "selected": true
-      },
-      {
         "extension": ".gif",
         "selected": true
+      },
+      {
+        "extension": ".mp4",
+        "selected": false
       }
     ]
   },

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Microsoft.VisualBasic.FileIO;
 using ScheduledCleanup.Model;
 
 namespace ScheduledCleanup.Helper
@@ -10,7 +11,7 @@ namespace ScheduledCleanup.Helper
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static ExecResult DelFile(string filePath)
+        public static ExecResult DelFile(string filePath, bool toRecycleBin = true)
         {
             if (string.IsNullOrEmpty(filePath))
             {
@@ -24,7 +25,17 @@ namespace ScheduledCleanup.Helper
 
             try
             {
-                File.Delete(filePath);
+                if (toRecycleBin)
+                {
+                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(filePath,
+                            UIOption.OnlyErrorDialogs,
+                            RecycleOption.SendToRecycleBin);
+                }
+                else
+                {
+                    File.Delete(filePath);
+                }
+
                 return ExecResult.SuccessResult("文件删除成功");
             }
             catch (FileNotFoundException)
@@ -101,7 +112,7 @@ namespace ScheduledCleanup.Helper
                 return;
 
             // 获取所有子目录（包括嵌套目录）
-            var allDirectories = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories);
+            var allDirectories = Directory.GetDirectories(rootPath, "*", System.IO.SearchOption.AllDirectories);
 
             // 按目录深度降序排序（先处理最深层的目录）
             var orderedDirectories = allDirectories
@@ -114,7 +125,7 @@ namespace ScheduledCleanup.Helper
                     try
                     {
                         Directory.Delete(directory);
-                        Logger.WriteLog($"已删除空目录: {directory}");
+                        Logger.WriteLog($"[已删除空目录]: {directory}");
                     }
                     catch (Exception ex)
                     {

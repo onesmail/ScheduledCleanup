@@ -46,7 +46,7 @@ namespace ScheduledCleanup.Helper
                 catch (Exception ex)
                 {
                     // 如果日志写入失败，可以在这里处理，比如输出到控制台
-                    Console.WriteLine($"无法写入日志: {ex.Message}");
+                    Console.WriteLine($"[无法写入日志]: {ex.Message}");
                 }
             }
         }
