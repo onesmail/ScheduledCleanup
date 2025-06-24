@@ -22,7 +22,7 @@
       },
       {
         "extension": ".ico",
-        "selected": false
+        "selected": true
       },
       {
         "extension": ".zip",
@@ -45,12 +45,6 @@
     },
     {
       "path": "C:\\Users\\lang_\\Desktop\\\u65B0\u5EFA\u6587\u4EF6\u5939 - \u526F\u672C - \u526F\u672C",
-      "selected": false,
-      "start": "2025/1/1",
-      "end": "2025/6/23"
-    },
-    {
-      "path": "E:\\Soft\\Tools",
       "selected": false,
       "start": "2025/1/1",
       "end": "2025/6/23"
