@@ -305,7 +305,7 @@
             MaximizeBox = false;
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "定时清理程序中学生上传的资源文件";
+            Text = "定时清理程序中上传的资源文件";
             Activated += Form1_Activated;
             ResumeLayout(false);
             PerformLayout();

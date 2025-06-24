@@ -178,7 +178,7 @@ namespace ScheduledCleanup
             notifyIcon = new NotifyIcon
             {
                 Icon = (Icon)resources.GetObject("$this.Icon"), // 使用项目资源中的图标
-                Text = "定时清理程序中学生上传的资源文件",
+                Text = "定时清理程序中上传的资源文件",
                 Visible = false
             };
 
@@ -214,7 +214,7 @@ namespace ScheduledCleanup
             {
                 // 询问用户操作
                 var result = MessageBox.Show(
-                    "您是要最小化到系统托盘吗？\n点击是则最小化到托盘，点击否则退出程序。",
+                    "需要最小化到系统托盘吗？\n点击【是】最小化到托盘，点击【否】退出程序。",
                     "提示",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question);
