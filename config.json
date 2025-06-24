@@ -3,7 +3,7 @@
     "start": "",
     "end": "",
     "interval": 60,
-    "delemptyfolder": true,
+    "delemptyfolder": false,
     "allow": [
       {
         "extension": ".jpg",

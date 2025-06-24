@@ -12,6 +12,7 @@ namespace ScheduledCleanup
         public Form1()
         {
             InitializeComponent();
+            InitializeTrayIcon();
             InitializeTimer();
             InitData();
         }
@@ -165,6 +166,91 @@ namespace ScheduledCleanup
             }
         }
 
+        #region 系统托盘
+
+        private NotifyIcon notifyIcon;
+        private ContextMenuStrip trayMenu;
+
+        private void InitializeTrayIcon()
+        {
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            // 创建托盘图标
+            notifyIcon = new NotifyIcon
+            {
+                Icon = (Icon)resources.GetObject("$this.Icon"), // 使用项目资源中的图标
+                Text = "定时清理程序中学生上传的资源文件",
+                Visible = false
+            };
+
+            // 创建托盘菜单
+            trayMenu = new ContextMenuStrip();
+            trayMenu.Items.Add("显示主窗口", null, (s, e) => RestoreFromTray());
+            trayMenu.Items.Add("退出", null, (s, e) => ExitApplication());
+
+            notifyIcon.ContextMenuStrip = trayMenu;
+
+            // 双击托盘图标恢复窗口
+            notifyIcon.DoubleClick += (s, e) => RestoreFromTray();
+        }
+
+        private void RestoreFromTray()
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            notifyIcon.Visible = false;
+            this.Activate(); // 激活窗口
+        }
+
+        private void ExitApplication()
+        {
+            notifyIcon.Visible = false;
+            notifyIcon.Dispose();
+            Application.Exit();
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                // 询问用户操作
+                var result = MessageBox.Show(
+                    "您是要最小化到系统托盘吗？\n点击是则最小化到托盘，点击否则退出程序。",
+                    "提示",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    e.Cancel = true; // 取消关闭事件
+                    MinimizeToTray();
+                }
+                else
+                {
+                    ExitApplication();
+                }
+            }
+
+            base.OnFormClosing(e);
+        }
+
+        private void MinimizeToTray()
+        {
+            this.Hide();
+            notifyIcon.Visible = true;
+            notifyIcon.ShowBalloonTip(1000, "提示", "程序已最小化到托盘", ToolTipIcon.Info);
+        }
+
+        // 窗体最小化按钮点击事件
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                MinimizeToTray();
+            }
+        }
+
+        #endregion
+
         /// <summary>
         /// 选择目录目录
         /// </summary>
@@ -211,11 +297,11 @@ namespace ScheduledCleanup
                 return;
             }
 
-            //var confirm = MessageBox.Show("确定要定时清理该目录吗？", "确认", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            //if (confirm == DialogResult.Yes)
-            //{
-
-            //}
+            var confirm = MessageBox.Show($"确定要定时清理该目录下【{dateTimePicker1.Value.ToShortDateString()} - {dateTimePicker2.Value.ToShortDateString()}】创建的文件 ？", "确认", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm != DialogResult.Yes)
+            {
+                return;
+            }
 
             if (DataConfigProvider.PathExists(textBox1.Text))
             {
@@ -268,6 +354,12 @@ namespace ScheduledCleanup
         /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
         {
+            if (checkedListBox1.Items.Count == 0)
+            {
+                MessageBox.Show("请添加要清理的目录", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             timer.Start();
             isRunning = true;
 

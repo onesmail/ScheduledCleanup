@@ -139,7 +139,7 @@
             label2.Name = "label2";
             label2.Size = new Size(68, 17);
             label2.TabIndex = 8;
-            label2.Text = "清除日期：";
+            label2.Text = "文件日期：";
             // 
             // button5
             // 
@@ -305,7 +305,7 @@
             MaximizeBox = false;
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "定时清理文件";
+            Text = "定时清理程序中学生上传的资源文件";
             Activated += Form1_Activated;
             ResumeLayout(false);
             PerformLayout();

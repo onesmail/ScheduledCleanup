@@ -6,7 +6,7 @@ namespace ScheduledCleanup.Helper
     {
         private static readonly object lockObj = new object();
         private static string logDirectory = "logs"; // 日志目录
-        private static string logFilePrefix = "log_"; // 日志文件前缀
+        private static string logFilePrefix = "log"; // 日志文件前缀
 
         static Logger()
         {
