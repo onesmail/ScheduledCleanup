@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             folderBrowserDialog1 = new FolderBrowserDialog();
             button1 = new Button();
@@ -53,6 +54,8 @@
             button9 = new Button();
             label6 = new Label();
             checkBox1 = new CheckBox();
+            comboBox1 = new ComboBox();
+            toolTip1 = new ToolTip(components);
             SuspendLayout();
             // 
             // folderBrowserDialog1
@@ -61,7 +64,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(859, 41);
+            button1.Location = new Point(874, 41);
             button1.Name = "button1";
             button1.Size = new Size(90, 23);
             button1.TabIndex = 0;
@@ -71,14 +74,14 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(101, 42);
+            textBox1.Location = new Point(95, 42);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(752, 23);
             textBox1.TabIndex = 1;
             // 
             // button2
             // 
-            button2.Location = new Point(955, 41);
+            button2.Location = new Point(970, 41);
             button2.Name = "button2";
             button2.Size = new Size(75, 23);
             button2.TabIndex = 2;
@@ -88,6 +91,7 @@
             // 
             // checkedListBox1
             // 
+            checkedListBox1.ForeColor = Color.Green;
             checkedListBox1.FormattingEnabled = true;
             checkedListBox1.Location = new Point(29, 253);
             checkedListBox1.Name = "checkedListBox1";
@@ -107,7 +111,7 @@
             // 
             // dateTimePicker1
             // 
-            dateTimePicker1.Location = new Point(101, 13);
+            dateTimePicker1.Location = new Point(95, 13);
             dateTimePicker1.Name = "dateTimePicker1";
             dateTimePicker1.Size = new Size(157, 23);
             dateTimePicker1.TabIndex = 5;
@@ -153,7 +157,7 @@
             // 
             // textBox2
             // 
-            textBox2.Location = new Point(155, 210);
+            textBox2.Location = new Point(119, 209);
             textBox2.Name = "textBox2";
             textBox2.Size = new Size(155, 23);
             textBox2.TabIndex = 11;
@@ -161,7 +165,7 @@
             // 
             // dateTimePicker2
             // 
-            dateTimePicker2.Location = new Point(297, 12);
+            dateTimePicker2.Location = new Point(291, 12);
             dateTimePicker2.Name = "dateTimePicker2";
             dateTimePicker2.Size = new Size(148, 23);
             dateTimePicker2.TabIndex = 12;
@@ -169,16 +173,16 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(26, 214);
+            label3.Location = new Point(29, 213);
             label3.Name = "label3";
-            label3.Size = new Size(128, 17);
+            label3.Size = new Size(92, 17);
             label3.TabIndex = 13;
-            label3.Text = "执行间隔时间（秒）：";
+            label3.Text = "执行间隔时间：";
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(268, 16);
+            label4.Location = new Point(262, 16);
             label4.Name = "label4";
             label4.Size = new Size(13, 17);
             label4.TabIndex = 14;
@@ -186,7 +190,7 @@
             // 
             // button6
             // 
-            button6.Location = new Point(476, 208);
+            button6.Location = new Point(515, 208);
             button6.Name = "button6";
             button6.Size = new Size(75, 23);
             button6.TabIndex = 10;
@@ -219,7 +223,7 @@
             // 
             checkedListBox2.CheckOnClick = true;
             checkedListBox2.FormattingEnabled = true;
-            checkedListBox2.Location = new Point(101, 115);
+            checkedListBox2.Location = new Point(95, 115);
             checkedListBox2.MultiColumn = true;
             checkedListBox2.Name = "checkedListBox2";
             checkedListBox2.Size = new Size(752, 76);
@@ -237,14 +241,14 @@
             // 
             // textBox3
             // 
-            textBox3.Location = new Point(101, 77);
+            textBox3.Location = new Point(95, 77);
             textBox3.Name = "textBox3";
             textBox3.Size = new Size(157, 23);
             textBox3.TabIndex = 19;
             // 
             // button9
             // 
-            button9.Location = new Point(268, 77);
+            button9.Location = new Point(262, 77);
             button9.Name = "button9";
             button9.Size = new Size(75, 23);
             button9.TabIndex = 20;
@@ -264,12 +268,20 @@
             // checkBox1
             // 
             checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(345, 212);
+            checkBox1.Location = new Point(400, 211);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(99, 21);
             checkBox1.TabIndex = 22;
             checkBox1.Text = "删除空文件夹";
             checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // comboBox1
+            // 
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(284, 208);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(64, 25);
+            comboBox1.TabIndex = 23;
             // 
             // Form1
             // 
@@ -277,6 +289,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(1054, 632);
+            Controls.Add(comboBox1);
             Controls.Add(checkBox1);
             Controls.Add(label6);
             Controls.Add(button9);
@@ -337,5 +350,7 @@
         private Button button9;
         private Label label6;
         private CheckBox checkBox1;
+        private ComboBox comboBox1;
+        private ToolTip toolTip1;
     }
 }

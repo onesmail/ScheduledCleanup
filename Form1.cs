@@ -19,13 +19,20 @@ namespace ScheduledCleanup
 
         private void InitializeTimer()
         {
-            timer.Interval = DataConfigProvider.DataConfig.Config.Seconds; // 1秒
+            timer.Interval = DataConfigProvider.DataConfig.Config.MilliSecond; // 1秒
             timer.Elapsed += Timer2_Elapsed;
             timer.AutoReset = true; // 设置为false表示只触发一次
         }
 
         private void InitData()
         {
+            var timeType = new string[] { "天", "时", "分", "秒" };
+            foreach (var item in timeType)
+            {
+                comboBox1.Items.Add(item);
+            }
+            comboBox1.SelectedItem = DataConfigProvider.DataConfig.Config.TimeUnit ?? "天";
+
             var paths = DataConfigProvider.DataConfig.DelPaths;
 
             for (int i = 0; i < paths.Count; i++)
@@ -52,15 +59,7 @@ namespace ScheduledCleanup
                     dateTimePicker2.Text = config.End;
                 }
 
-                if (config.Interval <= 0)
-                {
-                    textBox2.Text = "60"; // 默认60秒
-                }
-                else
-                {
-                    textBox2.Text = config.Interval.ToString();
-                }
-
+                textBox2.Text = config.Interval.ToString();
                 checkBox1.Checked = config.DelEmptyFolder;
             }
 
@@ -437,6 +436,7 @@ namespace ScheduledCleanup
             DataConfigProvider.SaveConfig(new Config
             {
                 Interval = Convert.ToInt32(textBox2.Text),
+                TimeUnit = comboBox1.SelectedItem?.ToString() ?? "天",
                 Start = dateTimePicker1.Value.ToShortDateString(),
                 End = dateTimePicker2.Value.ToShortDateString(),
                 DelEmptyFolder = checkBox1.Checked,
@@ -448,8 +448,12 @@ namespace ScheduledCleanup
                 timer.Stop();
             }
 
-            timer.Interval = DataConfigProvider.DataConfig.Config.Seconds; // 更新定时器间隔
-            timer.Start();
+            timer.Interval = DataConfigProvider.DataConfig.Config.MilliSecond; // 更新定时器间隔
+
+            if (isRunning)
+            {
+                timer.Start();
+            }
 
             // 保存成功
             MessageBox.Show("配置信息保存成功", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);

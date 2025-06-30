@@ -2,8 +2,9 @@
   "cnofig": {
     "start": "",
     "end": "",
-    "interval": 60,
+    "interval": 1,
     "delemptyfolder": false,
+    "timeunit": "天",
     "allow": [
       {
         "extension": ".jpg",

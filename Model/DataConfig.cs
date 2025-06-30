@@ -60,7 +60,13 @@ namespace ScheduledCleanup.Model
         /// 删除间隔时间
         /// </summary>
         [JsonPropertyName("interval")]
-        public int Interval { get; set; } = 60;
+        public int Interval { get; set; } = 1;
+
+        /// <summary>
+        /// 删除间隔时间单位
+        /// </summary>
+        [JsonPropertyName("timeunit")]
+        public string? TimeUnit { get; set; }
 
         /// <summary>
         /// 删除空文件夹
@@ -72,7 +78,24 @@ namespace ScheduledCleanup.Model
         /// 删除间隔时间
         /// </summary>
         [JsonIgnore]
-        public int Seconds => Interval * 1000;
+        public int MilliSecond
+        {
+            get
+            {
+                switch (TimeUnit)
+                {
+                    case "秒":
+                        return Interval * 1000;
+                    case "分":
+                        return Interval * 60 * 1000;
+                    case "时":
+                        return Interval * 60 * 60 * 1000;
+                    case "天":
+                    default:
+                        return Interval * 24 * 60 * 60 * 1000;
+                }
+            }
+        }
 
         [JsonPropertyName("allow")]
         public IList<Allow> Allow { get; set; } = new List<Allow>();
